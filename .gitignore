@@ -80,3 +80,7 @@ tmp/
 temp/
 *.tmp
 *.bak
+
+# Python tooling caches
+.ruff_cache/
+.mypy_cache/

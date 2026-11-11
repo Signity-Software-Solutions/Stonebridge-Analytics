@@ -9,9 +9,11 @@ answer is built from approved report fields, every step of the pipeline is
 visible, and questions that touch protected data are refused with an
 explanation instead of a guess.
 
-The whole product runs in the browser on typed fixtures and scripted timers.
-There is no backend, no database, no API keys and no environment variables.
-Every route is prerendered static.
+The frontend runs entirely in the browser on typed fixtures and scripted
+timers, with every route prerendered static, so it needs nothing else to run.
+A separate Python FastAPI service in [`backend/`](backend/README.md) holds
+server-side logic, starting with the access check for questions. The two are
+independent: each has its own dependencies, configuration and deployment.
 
 ## Features
 
@@ -75,11 +77,35 @@ Open the Program Spend report with a specific question already queued:
 /reports/program-spend?s=guarded
 ```
 
+### Run the backend (optional)
+
+The frontend does not need it. To run both:
+
+```bash
+cd backend
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements-dev.txt
+uvicorn app.main:create_app --factory --reload --port 8000
+```
+
+Interactive API docs are at http://localhost:8000/docs. See
+[backend/README.md](backend/README.md) for endpoints, configuration, tests and
+deployment.
+
 ## Configuration
 
-None required. The app reads no environment variables and talks to no
-external service, so there is nothing to configure and no `.env` file to
-create. All content comes from typed fixtures in `src/lib/`.
+Nothing is required to run the frontend. All screen content comes from typed
+fixtures in `src/lib/`.
+
+To point the frontend at the backend, copy `.env.example` to `.env.local`:
+
+| Variable | Default | Purpose |
+| -------- | ------- | ------- |
+| `NEXT_PUBLIC_API_BASE_URL` | `http://localhost:8000` | Where the browser reaches the backend |
+
+This value is inlined at build time, so rebuild the frontend after changing it
+for a deployed site. The backend must also list the frontend's address in its
+`CORS_ORIGINS`. The typed client lives in `src/lib/api.ts`.
 
 ## Scripts
 
@@ -99,10 +125,12 @@ src/
   components/     Shared UI, app shell, charts, tour and view components
   hooks/          useScriptedTimeline, the single animation loop
   lib/
+    api.ts        Typed client for the backend
     data.ts       Typed fixtures for the workspace
     scenarios/    One typed script per question
     tour.ts       Guided tour steps
     types.ts      Shared types
+backend/          Independent FastAPI service (own README, deps and tests)
 deck/             Case study deck and the scripts used to build it
 tools/check.sh    Pre-commit gates
 ```
@@ -141,10 +169,15 @@ node deck-stonebridge.js         # after editing SKILL in the file
 
 ## Deployment
 
-The app is fully static, so it deploys anywhere that serves a Next.js build.
-On Vercel, import the repository and accept the defaults: no environment
-variables, no build flags and no server runtime are needed. `npm run build`
-is the whole story.
+The two apps deploy separately.
+
+- **Frontend:** fully static, so it deploys anywhere that serves a Next.js
+  build. On Vercel, import the repository and accept the defaults; no server
+  runtime is needed. Set `NEXT_PUBLIC_API_BASE_URL` only if the screens use
+  the backend.
+- **Backend:** build the container from `backend/` (see
+  [backend/README.md](backend/README.md)) and host it anywhere that runs
+  containers. Set `CORS_ORIGINS` to the frontend's address.
 
 ## License
 
