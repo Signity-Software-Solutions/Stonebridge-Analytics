@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { SCENARIOS } from "@/lib/scenarios";
 import type { ScenarioId } from "@/lib/types";
+import { useScenarios } from "./WorkspaceProvider";
 
 /**
  * The four question pills. Switching replaces ?s= in place; the scene keys
@@ -11,6 +11,7 @@ import type { ScenarioId } from "@/lib/types";
 export function ScenarioPicker({ current }: { current: ScenarioId }) {
   const router = useRouter();
   const pathname = usePathname();
+  const { scenarios } = useScenarios();
 
   return (
     <div
@@ -19,7 +20,7 @@ export function ScenarioPicker({ current }: { current: ScenarioId }) {
       role="group"
       aria-label="Choose a saved question"
     >
-      {SCENARIOS.map((s) => {
+      {scenarios.map((s) => {
         const active = s.id === current;
         return (
           <button

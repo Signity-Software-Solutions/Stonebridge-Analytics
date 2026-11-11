@@ -19,12 +19,11 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import { getScenario } from "@/lib/scenarios";
 import { BrandMark } from "./BrandMark";
-import { PERSONA } from "@/lib/data";
 import type { TourSceneId } from "@/lib/tour";
 import { useApp } from "./AppProvider";
 import { ScenarioPicker } from "./ScenarioPicker";
+import { useScenarios, useWorkspace } from "./WorkspaceProvider";
 import { WelcomeDialog } from "./WelcomeDialog";
 
 /**
@@ -59,12 +58,14 @@ export function AppShell({ tourScene, withScenario = false, children }: AppShell
   const router = useRouter();
   const pathname = usePathname();
   const scenarioId = useSearchParams().get("s");
+  const { getScenario } = useScenarios();
+  const persona = useWorkspace();
   const scenario = getScenario(scenarioId);
   const { restartTour } = useApp();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const initials = PERSONA.name
+  const initials = persona.name
     .split(" ")
     .map((w) => w[0])
     .slice(0, 2)
@@ -102,7 +103,7 @@ export function AppShell({ tourScene, withScenario = false, children }: AppShell
         {NAV.map(navFor)}
       </nav>
       <div className="mt-auto px-3 pb-1">
-        <p className="text-side-mute text-[11px] font-bold">{PERSONA.company}</p>
+        <p className="text-side-mute text-[11px] font-bold">{persona.company}</p>
         <p className="text-side-mute/70 text-[10px]">Workspace</p>
       </div>
     </div>
@@ -190,8 +191,8 @@ export function AppShell({ tourScene, withScenario = false, children }: AppShell
                       className="border-line bg-surface animate-rise absolute right-0 z-40 mt-2 w-56 rounded-xl border p-1.5 shadow-xl"
                     >
                       <div className="px-2.5 py-2">
-                        <p className="text-ink text-[13px] font-bold">{PERSONA.name}</p>
-                        <p className="text-faint text-[11px]">{PERSONA.role}</p>
+                        <p className="text-ink text-[13px] font-bold">{persona.name}</p>
+                        <p className="text-faint text-[11px]">{persona.role}</p>
                       </div>
                       <div className="bg-hairline my-1 h-px" />
                       <button

@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
-import { PERSONA } from "@/lib/data";
+import { Loadable } from "@/components/Loadable";
+import { useWorkspace } from "@/components/WorkspaceProvider";
+import { useAsync } from "@/hooks/useAsync";
+import { api } from "@/lib/api";
+import type { WorkspaceSettings } from "@/lib/types";
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
@@ -36,36 +40,47 @@ function Toggle({ label, sub, initial }: { label: string; sub: string; initial: 
   );
 }
 
+function SettingsContent({ settings }: { settings: WorkspaceSettings }) {
+  const persona = useWorkspace();
+
+  return (
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
+      <h1 className="text-ink text-xl font-bold tracking-tight">Settings</h1>
+      <p className="text-mute mt-0.5 text-[13px]">Your profile and the workspace defaults.</p>
+
+      <section className="panel-card mt-5 overflow-hidden">
+        <h2 className="text-ink border-hairline border-b px-4 py-3 text-[13px] font-bold">Profile</h2>
+        <Row label="Name" value={persona.name} />
+        <Row label="Role" value={persona.role} />
+        <Row label="Email" value={persona.email} />
+        <Row label="Workspace" value={persona.company} />
+      </section>
+
+      <section className="panel-card mt-4 overflow-hidden">
+        <h2 className="text-ink border-hairline border-b px-4 py-3 text-[13px] font-bold">Workspace defaults</h2>
+        {settings.defaults.map((d) => (
+          <Row key={d.label} label={d.label} value={d.value} />
+        ))}
+      </section>
+
+      <section className="panel-card mt-4 overflow-hidden">
+        <h2 className="text-ink border-hairline border-b px-4 py-3 text-[13px] font-bold">Notifications</h2>
+        {settings.notifications.map((n) => (
+          <Toggle key={n.id} label={n.label} sub={n.sub} initial={n.enabled} />
+        ))}
+      </section>
+    </div>
+  );
+}
+
 export function SettingsView() {
+  const state = useAsync(() => api.settings());
+
   return (
     <AppShell tourScene="home">
-      <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
-        <h1 className="text-ink text-xl font-bold tracking-tight">Settings</h1>
-        <p className="text-mute mt-0.5 text-[13px]">Your profile and the workspace defaults.</p>
-
-        <section className="panel-card mt-5 overflow-hidden">
-          <h2 className="text-ink border-hairline border-b px-4 py-3 text-[13px] font-bold">Profile</h2>
-          <Row label="Name" value={PERSONA.name} />
-          <Row label="Role" value={PERSONA.role} />
-          <Row label="Email" value={PERSONA.email} />
-          <Row label="Workspace" value={PERSONA.company} />
-        </section>
-
-        <section className="panel-card mt-4 overflow-hidden">
-          <h2 className="text-ink border-hairline border-b px-4 py-3 text-[13px] font-bold">Workspace defaults</h2>
-          <Row label="Currency" value="USD" />
-          <Row label="Fiscal year starts" value="January" />
-          <Row label="Nightly refresh" value="02:00 local" />
-          <Row label="Saved charts visibility" value="Everyone in the workspace" />
-        </section>
-
-        <section className="panel-card mt-4 overflow-hidden">
-          <h2 className="text-ink border-hairline border-b px-4 py-3 text-[13px] font-bold">Notifications</h2>
-          <Toggle label="Refresh digest" sub="One morning note when the nightly load finishes" initial={true} />
-          <Toggle label="Saved chart alerts" sub="When someone saves a chart to a report you own" initial={true} />
-          <Toggle label="Scope refusals" sub="When a question is refused on a report you own" initial={false} />
-        </section>
-      </div>
+      <Loadable state={state} label="Loading settings">
+        {(settings) => <SettingsContent settings={settings} />}
+      </Loadable>
     </AppShell>
   );
 }

@@ -1,0 +1,62 @@
+[
+  {
+    "time": "09:14",
+    "user": "Nora Vance",
+    "action": "Asked a question",
+    "target": "Program Spend"
+  },
+  {
+    "time": "09:12",
+    "user": "Nora Vance",
+    "action": "Saved a chart",
+    "target": "Program Spend"
+  },
+  {
+    "time": "08:58",
+    "user": "Dele Akande",
+    "action": "Exported table",
+    "target": "Open Reserves"
+  },
+  {
+    "time": "08:47",
+    "user": "Priya Raman",
+    "action": "Opened report",
+    "target": "Account Cash Position"
+  },
+  {
+    "time": "08:31",
+    "user": "Sam Kowalczyk",
+    "action": "Changed date range",
+    "target": "Active Claims"
+  },
+  {
+    "time": "08:20",
+    "user": "Dele Akande",
+    "action": "Saved a chart",
+    "target": "Payment Summary"
+  },
+  {
+    "time": "07:55",
+    "user": "Mia Schulte",
+    "action": "Opened report",
+    "target": "Exception Review"
+  },
+  {
+    "time": "07:41",
+    "user": "Priya Raman",
+    "action": "Asked a question",
+    "target": "Program Spend"
+  },
+  {
+    "time": "07:30",
+    "user": "System",
+    "action": "Nightly refresh finished",
+    "target": "All reports"
+  },
+  {
+    "time": "Yesterday",
+    "user": "Sam Kowalczyk",
+    "action": "Pinned report",
+    "target": "Vendor Usage"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "metric": {
+    "label": "Program paid, year to date",
+    "value": "$21.2M",
+    "trend": [1.82, 1.96, 1.54, 2.08, 2.23, 2.41, 2.15, 2.32, 2.19]
+  },
+  "question": {
+    "text": "Paid by claim category this fiscal year",
+    "answeredIn": "6.2s"
+  }
+}

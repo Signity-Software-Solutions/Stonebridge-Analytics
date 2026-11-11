@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   ArrowUpRight,
   Check,
@@ -15,25 +15,25 @@ import {
   Sparkles,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { Loadable } from "@/components/Loadable";
+import { useScenarios, useWorkspace } from "@/components/WorkspaceProvider";
 import { Bars, ChartFor } from "@/components/charts";
+import { useAsync } from "@/hooks/useAsync";
 import { useScriptedTimeline } from "@/hooks/useScriptedTimeline";
-import { getScenario } from "@/lib/scenarios";
-import { CLIENTS, PERSONA } from "@/lib/data";
-import type { Scenario } from "@/lib/types";
-
-const SUGGESTIONS = [
-  "Paid by claim category this fiscal year",
-  "Monthly paid compared with last year",
-  "Which regions cost the most",
-  "Top accounts by open claims",
-];
-
-const HISTORY_CHART = CLIENTS.slice(0, 5).map((c) => ({ label: c.name, value: c.ytdPaid }));
+import { api } from "@/lib/api";
+import type { AskContext, Scenario } from "@/lib/types";
 
 function Avatar({ who }: { who: "user" | "ai" }) {
+  const persona = useWorkspace();
+  const initials = persona.name
+    .split(" ")
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join("");
+
   return who === "user" ? (
     <span className="bg-brand-strong flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white">
-      NV
+      {initials}
     </span>
   ) : (
     <span className="bg-tint text-brand flex size-7 shrink-0 items-center justify-center rounded-full">
@@ -45,7 +45,7 @@ function Avatar({ who }: { who: "user" | "ai" }) {
 /** One scripted exchange: the question types into the input, becomes a user
  *  bubble, the assistant works through the pipeline, then answers with a
  *  governed chart or a refusal. Keyed on the scenario id. */
-function Conversation({ scenario }: { scenario: Scenario }) {
+function Conversation({ scenario, context }: { scenario: Scenario; context: AskContext }) {
   const durations = [scenario.typingMs, ...scenario.steps.map((s) => s.durationMs), 500];
   const t = useScriptedTimeline(durations);
   const [saved, setSaved] = useState(false);
@@ -66,31 +66,34 @@ function Conversation({ scenario }: { scenario: Scenario }) {
     <>
       {/* thread */}
       <div className="flex flex-col gap-4">
-        {/* a finished exchange from earlier this morning */}
-        <div className="flex justify-end gap-2.5">
-          <div className="bg-brand-strong max-w-[75%] rounded-2xl rounded-br-md px-4 py-2.5 text-[13.5px] font-medium text-white">
-            Top accounts by paid this year
-          </div>
-          <Avatar who="user" />
-        </div>
-        <div className="flex gap-2.5">
-          <Avatar who="ai" />
-          <div className="panel-card max-w-[85%] flex-1 p-4">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-ink text-[13.5px] font-bold">Top 5 accounts by paid</p>
-              <span className="bg-tint text-brand flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold">
-                <Pin className="size-2.5" /> Saved to Program Spend
-              </span>
+        {/* finished exchanges from earlier this morning */}
+        {context.history.map((h) => (
+          <Fragment key={h.question}>
+            <div className="flex justify-end gap-2.5">
+              <div className="bg-brand-strong max-w-[75%] rounded-2xl rounded-br-md px-4 py-2.5 text-[13.5px] font-medium text-white">
+                {h.question}
+              </div>
+              <Avatar who="user" />
             </div>
-            <div className="mt-3">
-              <Bars points={HISTORY_CHART} unit="currency" />
+            <div className="flex gap-2.5">
+              <Avatar who="ai" />
+              <div className="panel-card max-w-[85%] flex-1 p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-ink text-[13.5px] font-bold">{h.title}</p>
+                  <span className="bg-tint text-brand flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold">
+                    <Pin className="size-2.5" /> Saved to {h.savedTo}
+                  </span>
+                </div>
+                <div className="mt-3">
+                  <Bars points={h.chart.points} unit={h.chart.unit} />
+                </div>
+                <p className="text-mute border-hairline mt-3 border-t pt-2.5 text-[12px] leading-relaxed">
+                  {h.insight}
+                </p>
+              </div>
             </div>
-            <p className="text-mute border-hairline mt-3 border-t pt-2.5 text-[12px] leading-relaxed">
-              Arvex Labs leads at $4.6M, a fifth of all program spend. The top five accounts
-              carry just over half of the year's payments.
-            </p>
-          </div>
-        </div>
+          </Fragment>
+        ))}
 
         {/* the live exchange */}
         {sent && (
@@ -240,7 +243,7 @@ function Conversation({ scenario }: { scenario: Scenario }) {
           </div>
         </div>
         <div className="mt-2.5 flex flex-wrap gap-2">
-          {SUGGESTIONS.map((q) => (
+          {context.suggestions.map((q) => (
             <span
               key={q}
               className="border-line bg-surface text-mute rounded-full border px-3 py-1 text-[11.5px] font-semibold"
@@ -255,7 +258,10 @@ function Conversation({ scenario }: { scenario: Scenario }) {
 }
 
 export function AskView() {
+  const { getScenario } = useScenarios();
+  const persona = useWorkspace();
   const scenario = getScenario(useSearchParams().get("s"));
+  const state = useAsync(() => api.askContext());
 
   return (
     <AppShell tourScene="home" withScenario>
@@ -263,10 +269,12 @@ export function AskView() {
         <h1 className="text-ink text-xl font-bold tracking-tight">Ask the data</h1>
         <p className="text-mute mt-0.5 text-[13px]">
           Plain English in, governed charts out. Every answer reads from the same model as the
-          reports, under {PERSONA.company} scope.
+          reports, under {persona.company} scope.
         </p>
         <div className="mt-5">
-          <Conversation key={scenario.id} scenario={scenario} />
+          <Loadable state={state} label="Loading conversation">
+            {(context) => <Conversation key={scenario.id} scenario={scenario} context={context} />}
+          </Loadable>
         </div>
       </div>
     </AppShell>

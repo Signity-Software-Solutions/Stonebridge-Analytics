@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { AppProvider } from "@/components/AppProvider";
+import { WorkspaceProvider } from "@/components/WorkspaceProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -24,7 +25,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${inter.variable} ${jbMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <AppProvider>{children}</AppProvider>
+        <AppProvider>
+          <WorkspaceProvider>{children}</WorkspaceProvider>
+        </AppProvider>
       </body>
     </html>
   );

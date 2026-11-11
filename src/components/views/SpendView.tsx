@@ -16,19 +16,17 @@ import {
   BarChart3,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { Loadable } from "@/components/Loadable";
 import { Tour } from "@/components/Tour";
+import { useScenarios } from "@/components/WorkspaceProvider";
 import { Bars, ChartFor, Columns } from "@/components/charts";
+import { useAsync } from "@/hooks/useAsync";
 import { useScriptedTimeline } from "@/hooks/useScriptedTimeline";
-import { getScenario } from "@/lib/scenarios";
-import { SPEND_BY_GROUP, SPEND_BY_MONTH, SPEND_LINES, money, moneyExact } from "@/lib/data";
-import type { Scenario } from "@/lib/types";
+import { api } from "@/lib/api";
+import { money, moneyExact } from "@/lib/format";
+import type { Scenario, SpendLines, SpendSummary } from "@/lib/types";
 
-const KPIS = [
-  { label: "Total paid", value: "$21.2M", sub: "fiscal year to date" },
-  { label: "Claims with payments", value: "5,418", sub: "of 12,480 open claims" },
-  { label: "Average per claim", value: "$3,910", sub: "all categories" },
-  { label: "Accounts", value: "24", sub: "10 above $700K" },
-];
+const PAGE_SIZE = 10;
 
 function Slicer({ label, value }: { label: string; value: string }) {
   return (
@@ -222,7 +220,8 @@ const TABLE_COLS = [
 
 type ColKey = (typeof TABLE_COLS)[number]["key"];
 
-export function SpendView() {
+function SpendContent({ summary, lines }: { summary: SpendSummary; lines: SpendLines }) {
+  const { getScenario } = useScenarios();
   const scenario = getScenario(useSearchParams().get("s"));
   const [tab, setTab] = useState<"charts" | "table">("charts");
   const [skipSignal, setSkipSignal] = useState(0);
@@ -232,10 +231,11 @@ export function SpendView() {
   const toggleCol = (k: ColKey) =>
     setHiddenCols((prev) => (prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]));
   const visible = TABLE_COLS.filter((c) => !hiddenCols.includes(c.key));
-  const pageRows = SPEND_LINES.slice(page * 10, page * 10 + 10);
+  const pageCount = Math.max(1, Math.ceil(lines.items.length / PAGE_SIZE));
+  const pageRows = lines.items.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
 
   return (
-    <AppShell tourScene="spend" withScenario>
+    <>
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
@@ -268,7 +268,7 @@ export function SpendView() {
 
         {/* KPI strip */}
         <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {KPIS.map((k) => (
+          {summary.kpis.map((k) => (
             <div key={k.label} className="panel-card p-3.5">
               <p className="text-faint text-[10.5px] font-bold tracking-wide uppercase">{k.label}</p>
               <p className="text-brand mt-1 text-[22px] font-bold tracking-tight">{k.value}</p>
@@ -315,7 +315,7 @@ export function SpendView() {
                 </div>
                 <p className="text-faint mt-0.5 text-[11px]">Fiscal year to date, all accounts</p>
                 <div className="mt-3">
-                  <Bars points={SPEND_BY_GROUP} unit="currency" />
+                  <Bars points={summary.byGroup} unit="currency" />
                 </div>
               </section>
               <section className="panel-card p-4">
@@ -325,7 +325,7 @@ export function SpendView() {
                 </div>
                 <p className="text-faint mt-0.5 text-[11px]">January through September</p>
                 <div className="mt-4">
-                  <Columns points={SPEND_BY_MONTH} unit="currency" />
+                  <Columns points={summary.byMonth} unit="currency" />
                 </div>
               </section>
             </div>
@@ -416,7 +416,8 @@ export function SpendView() {
             {/* pagination */}
             <div className="border-hairline flex flex-wrap items-center justify-between gap-2 border-t px-4 py-2.5">
               <span className="text-faint text-[11.5px]">
-                Rows {page * 10 + 1} to {page * 10 + pageRows.length} of 84,312
+                Rows {page * PAGE_SIZE + 1} to {page * PAGE_SIZE + pageRows.length} of{" "}
+                {lines.totalRows.toLocaleString("en-US")}
               </span>
               <div className="flex items-center gap-1.5">
                 <button
@@ -427,7 +428,7 @@ export function SpendView() {
                 >
                   Previous
                 </button>
-                {[0, 1, 2].map((n) => (
+                {Array.from({ length: pageCount }, (_, n) => n).map((n) => (
                   <button
                     key={n}
                     type="button"
@@ -441,8 +442,8 @@ export function SpendView() {
                 ))}
                 <button
                   type="button"
-                  onClick={() => setPage((v) => Math.min(2, v + 1))}
-                  disabled={page === 2}
+                  onClick={() => setPage((v) => Math.min(pageCount - 1, v + 1))}
+                  disabled={page === pageCount - 1}
                   className="border-line text-mute hover:text-ink cursor-pointer rounded-lg border px-2.5 py-1 text-[11.5px] font-bold disabled:cursor-default disabled:opacity-40"
                 >
                   Next
@@ -453,6 +454,21 @@ export function SpendView() {
         )}
       </div>
       <Tour scene="spend" scenarioId={scenario.id} onMissingAnchor={onMissingAnchor} />
+    </>
+  );
+}
+
+export function SpendView() {
+  const state = useAsync(async () => {
+    const [summary, lines] = await Promise.all([api.spendSummary(), api.spendLines()]);
+    return { summary, lines };
+  });
+
+  return (
+    <AppShell tourScene="spend" withScenario>
+      <Loadable state={state} label="Loading Program Spend">
+        {({ summary, lines }) => <SpendContent summary={summary} lines={lines} />}
+      </Loadable>
     </AppShell>
   );
 }

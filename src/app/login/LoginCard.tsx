@@ -4,13 +4,65 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { KeyRound, Lock, MessageCircleQuestion, ShieldCheck, Table2 } from "lucide-react";
 import { BrandMark } from "@/components/BrandMark";
 import { Sparkline } from "@/components/Sparkline";
-import { PERSONA } from "@/lib/data";
+import { useWorkspace } from "@/components/WorkspaceProvider";
+import { useAsync } from "@/hooks/useAsync";
+import { api } from "@/lib/api";
 
 const FEATURES = [
   { icon: Table2, text: "Curated reports, faithful to the governed model" },
   { icon: MessageCircleQuestion, text: "A plain English question dock on every report" },
   { icon: ShieldCheck, text: "Protected fields stay protected, visibly" },
 ];
+
+/** The two floating cards in the dark panel. Decorative, so they never block sign in. */
+function PreviewCards() {
+  const { data, error } = useAsync(() => api.loginPreview());
+
+  if (!data) {
+    return (
+      <div className="mt-6 flex flex-col gap-3" aria-hidden={!error}>
+        {error ? (
+          <p className="text-side-mute text-[12px]">Workspace preview unavailable.</p>
+        ) : (
+          <>
+            <div className="bg-shimmer animate-shimmer h-[118px] rounded-xl" />
+            <div className="bg-shimmer animate-shimmer h-[92px] rounded-xl" />
+          </>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-6 flex flex-col gap-3">
+      {/* floating preview: spend trend */}
+      <div className="border-side-line rounded-xl border bg-white/[0.04] p-4">
+        <div className="flex items-center justify-between">
+          <p className="text-side-ink text-[12.5px] font-bold">{data.metric.label}</p>
+          <span className="text-side-mute text-[10.5px]">live</span>
+        </div>
+        <p className="text-side-ink mt-1 text-[22px] font-bold tracking-tight">{data.metric.value}</p>
+        <div className="mt-2">
+          <Sparkline points={data.metric.trend} width={340} height={56} color="#a5b4fc" />
+        </div>
+      </div>
+
+      {/* floating preview: an answered question */}
+      <div className="border-side-line rounded-xl border bg-white/[0.04] p-4">
+        <p className="text-side-mute text-[10px] font-bold tracking-[0.14em] uppercase">
+          Ask this report
+        </p>
+        <p className="text-side-ink mt-1.5 text-[13px] font-semibold">{data.question.text}</p>
+        <div className="mt-2.5 flex items-center gap-2">
+          <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10.5px] font-bold text-[#a5b4fc]">
+            Answered in {data.question.answeredIn}
+          </span>
+          <span className="text-side-mute text-[11px]">saved to the report</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /**
  * The front door: the sign in column beside a dark product panel with a
@@ -20,6 +72,7 @@ const FEATURES = [
 export function LoginCard() {
   const router = useRouter();
   const s = useSearchParams().get("s");
+  const persona = useWorkspace();
   const enter = () => router.push(`/home${s ? `?s=${s}` : ""}`);
 
   return (
@@ -45,7 +98,7 @@ export function LoginCard() {
             <div className="border-line bg-hairline/50 mt-1 flex h-11 items-center gap-2 rounded-lg border px-3">
               <input
                 readOnly
-                value={PERSONA.email}
+                value={persona.email}
                 className="text-mute w-full flex-1 bg-transparent text-[13px] outline-none"
                 aria-label="Work email"
               />
@@ -78,12 +131,12 @@ export function LoginCard() {
               className="bg-brand-strong flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold text-white shadow-md transition hover:brightness-110"
             >
               <KeyRound className="size-4" />
-              Continue with {PERSONA.company} SSO
+              Continue with {persona.company} SSO
             </button>
           </div>
 
           <p className="text-faint mt-4 text-[11px]">
-            Stonebridge for {PERSONA.company}. Signed in as {PERSONA.name}, {PERSONA.role}.
+            Stonebridge for {persona.company}. Signed in as {persona.name}, {persona.role}.
           </p>
         </div>
 
@@ -93,40 +146,7 @@ export function LoginCard() {
             One governed model. Every report, every chart, every answer reads from it.
           </p>
 
-          <div className="mt-6 flex flex-col gap-3">
-            {/* floating preview: spend trend */}
-            <div className="border-side-line rounded-xl border bg-white/[0.04] p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-side-ink text-[12.5px] font-bold">Program paid, year to date</p>
-                <span className="text-side-mute text-[10.5px]">live</span>
-              </div>
-              <p className="text-side-ink mt-1 text-[22px] font-bold tracking-tight">$21.2M</p>
-              <div className="mt-2">
-                <Sparkline
-                  points={[1.82, 1.96, 1.54, 2.08, 2.23, 2.41, 2.15, 2.32, 2.19]}
-                  width={340}
-                  height={56}
-                  color="#a5b4fc"
-                />
-              </div>
-            </div>
-
-            {/* floating preview: an answered question */}
-            <div className="border-side-line rounded-xl border bg-white/[0.04] p-4">
-              <p className="text-side-mute text-[10px] font-bold tracking-[0.14em] uppercase">
-                Ask this report
-              </p>
-              <p className="text-side-ink mt-1.5 text-[13px] font-semibold">
-                Paid by claim category this fiscal year
-              </p>
-              <div className="mt-2.5 flex items-center gap-2">
-                <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10.5px] font-bold text-[#a5b4fc]">
-                  Answered in 6.2s
-                </span>
-                <span className="text-side-mute text-[11px]">saved to the report</span>
-              </div>
-            </div>
-          </div>
+          <PreviewCards />
 
           <ul className="mt-6 flex flex-col gap-2.5">
             {FEATURES.map((f) => (

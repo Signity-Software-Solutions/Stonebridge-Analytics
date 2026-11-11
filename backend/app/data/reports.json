@@ -1,0 +1,82 @@
+[
+  {
+    "key": "program-spend",
+    "name": "Program Spend",
+    "domain": "Finance",
+    "owner": "Finance Operations",
+    "lastOpened": "Today, 9:14",
+    "live": true
+  },
+  {
+    "key": "open-reserves",
+    "name": "Open Reserves",
+    "domain": "Finance",
+    "owner": "Treasury",
+    "lastOpened": "Today, 8:42",
+    "live": true
+  },
+  {
+    "key": "payment-summary",
+    "name": "Payment Summary",
+    "domain": "Finance",
+    "owner": "Finance Operations",
+    "lastOpened": "Yesterday",
+    "live": true
+  },
+  {
+    "key": "account-position",
+    "name": "Account Cash Position",
+    "domain": "Finance",
+    "owner": "Treasury",
+    "lastOpened": "Yesterday",
+    "live": true
+  },
+  {
+    "key": "active-claims",
+    "name": "Active Claims",
+    "domain": "Operations",
+    "owner": "Claims Desk",
+    "lastOpened": "Mon",
+    "live": true
+  },
+  {
+    "key": "litigation",
+    "name": "Litigation Watch",
+    "domain": "Operations",
+    "owner": "Legal Desk",
+    "lastOpened": "Mon",
+    "live": true
+  },
+  {
+    "key": "exceptions",
+    "name": "Exception Review",
+    "domain": "Operations",
+    "owner": "Program Office",
+    "lastOpened": "Fri",
+    "live": true
+  },
+  {
+    "key": "vendor-usage",
+    "name": "Vendor Usage",
+    "domain": "Partners",
+    "owner": "Partner Network",
+    "lastOpened": "Fri",
+    "live": true
+  },
+  {
+    "key": "recovery",
+    "name": "Recovery Pipeline",
+    "domain": "Partners",
+    "owner": "Partner Network",
+    "lastOpened": "Last week",
+    "live": true
+  },
+  {
+    "key": "subrogation",
+    "name": "Subrogation Aging",
+    "domain": "Partners",
+    "owner": "Partner Network",
+    "lastOpened": "Last week",
+    "live": false
+  }
+]

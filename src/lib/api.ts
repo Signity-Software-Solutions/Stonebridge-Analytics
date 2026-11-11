@@ -1,14 +1,31 @@
 /**
  * Typed client for the Stonebridge API (the FastAPI service in /backend).
  *
- * The screens still render from the typed fixtures in this folder; nothing
- * calls this module yet. It is the one place that knows where the backend
- * lives and how its errors look, so a screen can adopt an endpoint later with
- * a single import.
+ * Every screen loads its data through this module; the frontend holds no
+ * fixtures of its own. It is also the one place that knows where the backend
+ * lives and how its errors look.
  *
  * NEXT_PUBLIC_API_BASE_URL is inlined by Next.js at build time, so changing it
  * for a deployed site means rebuilding the frontend.
  */
+
+import type {
+  ActivityEntry,
+  AskContext,
+  Claim,
+  Client,
+  Collection,
+  LoginPreview,
+  Overview,
+  Persona,
+  Report,
+  Scenario,
+  ScenarioList,
+  SpendLines,
+  SpendSummary,
+  Usage,
+  WorkspaceSettings,
+} from "./types";
 
 export const API_BASE_URL = (
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000"
@@ -16,7 +33,7 @@ export const API_BASE_URL = (
 
 const API_PREFIX = "/api/v1";
 
-/* Response shapes, mirroring backend/app/schemas. */
+/* Response shapes that are not screen data, mirroring backend/app/schemas. */
 
 export interface HealthStatus {
   status: "ok";
@@ -114,9 +131,50 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   return (await res.json()) as T;
 }
 
+/**
+ * The screen data is static, so each GET is fetched once per page load and
+ * shared: the shell, the picker and a view can all ask for the scenarios and
+ * trigger a single request. A failure is dropped from the cache, so a retry
+ * really retries.
+ */
+const cache = new Map<string, Promise<unknown>>();
+
+function get<T>(path: string): Promise<T> {
+  let hit = cache.get(path);
+  if (!hit) {
+    hit = request<T>(path).catch((err: unknown) => {
+      cache.delete(path);
+      throw err;
+    });
+    cache.set(path, hit);
+  }
+  return hit as Promise<T>;
+}
+
 export const api = {
+  /* service */
   health: () => request<HealthStatus>("/health"),
   meta: () => request<ServiceMeta>(`${API_PREFIX}/meta`),
+
+  /* workspace */
+  workspace: () => get<Persona>(`${API_PREFIX}/workspace`),
+  overview: () => get<Overview>(`${API_PREFIX}/overview`),
+  clients: () => get<Collection<Client>>(`${API_PREFIX}/clients`),
+  recentClaims: () => get<Collection<Claim>>(`${API_PREFIX}/claims/recent`),
+  reports: () => get<Collection<Report>>(`${API_PREFIX}/reports`),
+  activity: () => get<Collection<ActivityEntry>>(`${API_PREFIX}/activity`),
+  usage: () => get<Usage>(`${API_PREFIX}/analytics/usage`),
+  settings: () => get<WorkspaceSettings>(`${API_PREFIX}/settings`),
+  loginPreview: () => get<LoginPreview>(`${API_PREFIX}/login/preview`),
+
+  /* Program Spend */
+  spendSummary: () => get<SpendSummary>(`${API_PREFIX}/spend/summary`),
+  spendLines: () => get<SpendLines>(`${API_PREFIX}/spend/lines`),
+
+  /* Ask */
+  scenarios: () => get<ScenarioList>(`${API_PREFIX}/scenarios`),
+  scenario: (id: string) => get<Scenario>(`${API_PREFIX}/scenarios/${encodeURIComponent(id)}`),
+  askContext: () => get<AskContext>(`${API_PREFIX}/ask/context`),
   /** Server-side access check for a question. */
   checkQuestion: (question: string) =>
     request<GuardResult>(`${API_PREFIX}/ask/guard`, {

@@ -1,0 +1,17 @@
+{
+  "suggestions": [
+    "Paid by claim category this fiscal year",
+    "Monthly paid compared with last year",
+    "Which regions cost the most",
+    "Top accounts by open claims"
+  ],
+  "history": [
+    {
+      "question": "Top accounts by paid this year",
+      "title": "Top 5 accounts by paid",
+      "savedTo": "Program Spend",
+      "insight": "Arvex Labs leads at $4.6M, a fifth of all program spend. The top five accounts carry just over half of the year's payments.",
+      "topClients": 5
+    }
+  ]
+}

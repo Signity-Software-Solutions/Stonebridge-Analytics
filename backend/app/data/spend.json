@@ -1,0 +1,331 @@
+{
+  "kpis": [
+    {
+      "label": "Total paid",
+      "value": "$21.2M",
+      "sub": "fiscal year to date"
+    },
+    {
+      "label": "Claims with payments",
+      "value": "5,418",
+      "sub": "of 12,480 open claims"
+    },
+    {
+      "label": "Average per claim",
+      "value": "$3,910",
+      "sub": "all categories"
+    },
+    {
+      "label": "Accounts",
+      "value": "24",
+      "sub": "10 above $700K"
+    }
+  ],
+  "byGroup": [
+    {
+      "label": "Property damage",
+      "value": 7912400
+    },
+    {
+      "label": "Medical",
+      "value": 6438900
+    },
+    {
+      "label": "Liability",
+      "value": 3206750
+    },
+    {
+      "label": "Business interruption",
+      "value": 2118300
+    },
+    {
+      "label": "Legal costs",
+      "value": 1021600
+    },
+    {
+      "label": "Other",
+      "value": 486200
+    }
+  ],
+  "byMonth": [
+    {
+      "label": "Jan",
+      "value": 1820000
+    },
+    {
+      "label": "Feb",
+      "value": 1960000
+    },
+    {
+      "label": "Mar",
+      "value": 1540000
+    },
+    {
+      "label": "Apr",
+      "value": 2080000
+    },
+    {
+      "label": "May",
+      "value": 2230000
+    },
+    {
+      "label": "Jun",
+      "value": 2410000
+    },
+    {
+      "label": "Jul",
+      "value": 2150000
+    },
+    {
+      "label": "Aug",
+      "value": 2320000
+    },
+    {
+      "label": "Sep",
+      "value": 2190000
+    }
+  ],
+  "totalRows": 84312,
+  "lines": [
+    {
+      "claimNo": "HLG-24381",
+      "account": "ARVX",
+      "category": "Property damage",
+      "detail": "Contractor invoice",
+      "date": "Sep 26",
+      "amount": 18420.5
+    },
+    {
+      "claimNo": "HLG-24380",
+      "account": "CLDR",
+      "category": "Liability",
+      "detail": "Third party settlement",
+      "date": "Sep 26",
+      "amount": 24118
+    },
+    {
+      "claimNo": "HLG-24377",
+      "account": "NMBS",
+      "category": "Medical",
+      "detail": "Hospital invoice",
+      "date": "Sep 25",
+      "amount": 2150
+    },
+    {
+      "claimNo": "HLG-24371",
+      "account": "ORCH",
+      "category": "Business interruption",
+      "detail": "Lost revenue advance",
+      "date": "Sep 25",
+      "amount": 6240
+    },
+    {
+      "claimNo": "HLG-24368",
+      "account": "TSSL",
+      "category": "Property damage",
+      "detail": "Equipment salvage",
+      "date": "Sep 24",
+      "amount": 1890.75
+    },
+    {
+      "claimNo": "HLG-24362",
+      "account": "ARVX",
+      "category": "Legal costs",
+      "detail": "Defense counsel",
+      "date": "Sep 24",
+      "amount": 4512.25
+    },
+    {
+      "claimNo": "HLG-24359",
+      "account": "JNCA",
+      "category": "Property damage",
+      "detail": "Roof repair",
+      "date": "Sep 23",
+      "amount": 12304
+    },
+    {
+      "claimNo": "HLG-24355",
+      "account": "PNWD",
+      "category": "Property damage",
+      "detail": "Restoration crew",
+      "date": "Sep 23",
+      "amount": 19860
+    },
+    {
+      "claimNo": "HLG-24351",
+      "account": "VELD",
+      "category": "Medical",
+      "detail": "Physio program",
+      "date": "Sep 22",
+      "amount": 1475
+    },
+    {
+      "claimNo": "HLG-24347",
+      "account": "SABL",
+      "category": "Business interruption",
+      "detail": "Temporary office",
+      "date": "Sep 22",
+      "amount": 3082.4
+    },
+    {
+      "claimNo": "HLG-24330",
+      "account": "ARVX",
+      "category": "Property damage",
+      "detail": "Contractor invoice",
+      "date": "Sep 19",
+      "amount": 16025.84
+    },
+    {
+      "claimNo": "HLG-24327",
+      "account": "CLDR",
+      "category": "Liability",
+      "detail": "Third party settlement",
+      "date": "Sep 18",
+      "amount": 20982.66
+    },
+    {
+      "claimNo": "HLG-24324",
+      "account": "NMBS",
+      "category": "Medical",
+      "detail": "Hospital invoice",
+      "date": "Sep 19",
+      "amount": 1870.5
+    },
+    {
+      "claimNo": "HLG-24321",
+      "account": "ORCH",
+      "category": "Business interruption",
+      "detail": "Lost revenue advance",
+      "date": "Sep 18",
+      "amount": 5428.8
+    },
+    {
+      "claimNo": "HLG-24318",
+      "account": "TSSL",
+      "category": "Property damage",
+      "detail": "Equipment salvage",
+      "date": "Sep 19",
+      "amount": 1644.95
+    },
+    {
+      "claimNo": "HLG-24315",
+      "account": "ARVX",
+      "category": "Legal costs",
+      "detail": "Defense counsel",
+      "date": "Sep 18",
+      "amount": 3925.66
+    },
+    {
+      "claimNo": "HLG-24312",
+      "account": "JNCA",
+      "category": "Property damage",
+      "detail": "Roof repair",
+      "date": "Sep 19",
+      "amount": 10704.48
+    },
+    {
+      "claimNo": "HLG-24309",
+      "account": "PNWD",
+      "category": "Property damage",
+      "detail": "Restoration crew",
+      "date": "Sep 18",
+      "amount": 17278.2
+    },
+    {
+      "claimNo": "HLG-24306",
+      "account": "VELD",
+      "category": "Medical",
+      "detail": "Physio program",
+      "date": "Sep 19",
+      "amount": 1283.25
+    },
+    {
+      "claimNo": "HLG-24303",
+      "account": "SABL",
+      "category": "Business interruption",
+      "detail": "Temporary office",
+      "date": "Sep 18",
+      "amount": 2681.69
+    },
+    {
+      "claimNo": "HLG-24290",
+      "account": "ARVX",
+      "category": "Property damage",
+      "detail": "Contractor invoice",
+      "date": "Sep 16",
+      "amount": 20630.96
+    },
+    {
+      "claimNo": "HLG-24287",
+      "account": "CLDR",
+      "category": "Liability",
+      "detail": "Third party settlement",
+      "date": "Sep 15",
+      "amount": 27012.16
+    },
+    {
+      "claimNo": "HLG-24284",
+      "account": "NMBS",
+      "category": "Medical",
+      "detail": "Hospital invoice",
+      "date": "Sep 16",
+      "amount": 2408
+    },
+    {
+      "claimNo": "HLG-24281",
+      "account": "ORCH",
+      "category": "Business interruption",
+      "detail": "Lost revenue advance",
+      "date": "Sep 15",
+      "amount": 6988.8
+    },
+    {
+      "claimNo": "HLG-24278",
+      "account": "TSSL",
+      "category": "Property damage",
+      "detail": "Equipment salvage",
+      "date": "Sep 16",
+      "amount": 2117.64
+    },
+    {
+      "claimNo": "HLG-24275",
+      "account": "ARVX",
+      "category": "Legal costs",
+      "detail": "Defense counsel",
+      "date": "Sep 15",
+      "amount": 5053.72
+    },
+    {
+      "claimNo": "HLG-24272",
+      "account": "JNCA",
+      "category": "Property damage",
+      "detail": "Roof repair",
+      "date": "Sep 16",
+      "amount": 13780.48
+    },
+    {
+      "claimNo": "HLG-24269",
+      "account": "PNWD",
+      "category": "Property damage",
+      "detail": "Restoration crew",
+      "date": "Sep 15",
+      "amount": 22243.2
+    },
+    {
+      "claimNo": "HLG-24266",
+      "account": "VELD",
+      "category": "Medical",
+      "detail": "Physio program",
+      "date": "Sep 16",
+      "amount": 1652
+    },
+    {
+      "claimNo": "HLG-24263",
+      "account": "SABL",
+      "category": "Business interruption",
+      "detail": "Temporary office",
+      "date": "Sep 15",
+      "amount": 3452.29
+    }
+  ]
+}

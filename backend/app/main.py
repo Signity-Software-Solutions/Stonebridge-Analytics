@@ -16,13 +16,18 @@ from app.core.config import Settings, get_settings
 from app.core.errors import register_exception_handlers
 from app.core.logging import setup_logging
 from app.core.middleware import RequestContextMiddleware
+from app.data.store import DataStore
 
 logger = logging.getLogger(__name__)
 
 
-def create_app(settings: Settings | None = None) -> FastAPI:
+def create_app(
+    settings: Settings | None = None, store: DataStore | None = None
+) -> FastAPI:
     settings = settings or get_settings()
     setup_logging(settings.log_level)
+    # Validated now, so a bad data file stops the service from starting.
+    store = store or DataStore()
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -45,6 +50,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         openapi_url="/openapi.json" if settings.docs_enabled else None,
     )
     app.state.settings = settings
+    app.state.store = store
     # The last middleware added is the outermost. CORS must wrap everything so
     # that preflight requests and error responses all carry its headers.
     app.add_middleware(RequestContextMiddleware)

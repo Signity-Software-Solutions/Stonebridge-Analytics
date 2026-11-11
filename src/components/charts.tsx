@@ -4,7 +4,7 @@
  */
 
 import type { SeriesPoint } from "@/lib/types";
-import { money } from "@/lib/data";
+import { money } from "@/lib/format";
 
 const HUES = ["#4f46e5", "#6366f1", "#818cf8", "#a5b4fc", "#c7d2fe", "#e0e7ff"];
 

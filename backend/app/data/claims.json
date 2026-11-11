@@ -1,0 +1,74 @@
+[
+  {
+    "claimNo": "HLG-24381",
+    "claimant": "T. Okonkwo",
+    "account": "ARVX",
+    "incident": "Lab fire, Boston MA",
+    "coverage": "Property Core",
+    "status": "Open",
+    "paid": 86400
+  },
+  {
+    "claimNo": "HLG-24380",
+    "claimant": "R. Castillo",
+    "account": "CLDR",
+    "incident": "Fleet collision, Dallas TX",
+    "coverage": "Auto Liability",
+    "status": "Open",
+    "paid": 42150
+  },
+  {
+    "claimNo": "HLG-24377",
+    "claimant": "S. Lindgren",
+    "account": "NMBS",
+    "incident": "Slip and fall, Raleigh NC",
+    "coverage": "General Liability",
+    "status": "Review",
+    "paid": 9870
+  },
+  {
+    "claimNo": "HLG-24371",
+    "claimant": "A. Benali",
+    "account": "ORCH",
+    "incident": "Water damage, Seattle WA",
+    "coverage": "Property Core",
+    "status": "Open",
+    "paid": 57300
+  },
+  {
+    "claimNo": "HLG-24368",
+    "claimant": "K. Moreau",
+    "account": "TSSL",
+    "incident": "Turbine failure, Aberdeen",
+    "coverage": "Equipment Breakdown",
+    "status": "Open",
+    "paid": 73950
+  },
+  {
+    "claimNo": "HLG-24362",
+    "claimant": "J. Petrov",
+    "account": "ARVX",
+    "incident": "Cargo loss, Boston MA",
+    "coverage": "Marine Cargo",
+    "status": "Settled",
+    "paid": 31240
+  },
+  {
+    "claimNo": "HLG-24359",
+    "claimant": "M. Adeyemi",
+    "account": "JNCA",
+    "incident": "Warehouse hail, Columbus OH",
+    "coverage": "Property Core",
+    "status": "Open",
+    "paid": 28610
+  },
+  {
+    "claimNo": "HLG-24355",
+    "claimant": "L. Whitaker",
+    "account": "PNWD",
+    "incident": "Studio flood, Atlanta GA",
+    "coverage": "Property Core",
+    "status": "Settled",
+    "paid": 64020
+  }
+]

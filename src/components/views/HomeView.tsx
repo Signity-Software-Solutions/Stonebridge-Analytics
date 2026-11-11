@@ -11,53 +11,25 @@ import {
   TrendingDown,
   TrendingUp,
   Wallet,
+  type LucideIcon,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { Loadable } from "@/components/Loadable";
 import { Sparkline } from "@/components/Sparkline";
 import { Tour } from "@/components/Tour";
-import { getScenario } from "@/lib/scenarios";
-import { PERSONA, RECENT_CLAIMS, SPEND_BY_MONTH, money } from "@/lib/data";
+import { useScenarios, useWorkspace } from "@/components/WorkspaceProvider";
+import { useAsync } from "@/hooks/useAsync";
+import { api } from "@/lib/api";
+import { money } from "@/lib/format";
+import type { Claim, KpiId, Overview, SeriesPoint } from "@/lib/types";
 
-const KPIS = [
-  {
-    label: "Open claims",
-    value: "1,284",
-    delta: "+38 this month",
-    up: true as boolean | null,
-    icon: FolderOpen,
-    trend: [1180, 1194, 1201, 1226, 1238, 1246, 1261, 1284],
-  },
-  {
-    label: "Paid this month",
-    value: "$2.19M",
-    delta: "+6.3% vs August",
-    up: true as boolean | null,
-    icon: Wallet,
-    trend: [1.82, 1.96, 1.54, 2.08, 2.23, 2.41, 2.15, 2.19],
-  },
-  {
-    label: "Questions this week",
-    value: "81",
-    delta: "+12 on last week",
-    up: true as boolean | null,
-    icon: MessageCircleQuestion,
-    trend: [42, 51, 47, 63, 58, 72, 69, 81],
-  },
-  {
-    label: "Live reports",
-    value: "46",
-    delta: "refreshed 02:04",
-    up: null as boolean | null,
-    icon: FileBarChart2,
-    trend: [40, 41, 42, 42, 44, 45, 46, 46],
-  },
-];
-
-const PINNED = [
-  { name: "Program Spend", blurb: "Paid by account, region, coverage and category", href: "/reports/program-spend" },
-  { name: "Open Reserves", blurb: "Reserve position with aging per account", href: "/reports" },
-  { name: "Active Claims", blurb: "Every open claim with incident and status", href: "/reports" },
-];
+/** The icon is presentation, so it lives here, keyed by the KPI id the API sends. */
+const KPI_ICON: Record<KpiId, LucideIcon> = {
+  "open-claims": FolderOpen,
+  "paid-month": Wallet,
+  "questions-week": MessageCircleQuestion,
+  "live-reports": FileBarChart2,
+};
 
 const STATUS_STYLE: Record<string, string> = {
   Open: "bg-ok-soft text-ok",
@@ -65,11 +37,19 @@ const STATUS_STYLE: Record<string, string> = {
   Settled: "bg-pend-soft text-pend",
 };
 
-export function HomeView() {
+interface HomeData {
+  overview: Overview;
+  claims: Claim[];
+  spendByMonth: SeriesPoint[];
+}
+
+function HomeContent({ overview, claims, spendByMonth }: HomeData) {
+  const persona = useWorkspace();
+  const { getScenario } = useScenarios();
   const scenario = getScenario(useSearchParams().get("s"));
 
   return (
-    <AppShell tourScene="home">
+    <>
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
@@ -77,10 +57,10 @@ export function HomeView() {
               Tuesday, September 29
             </p>
             <h1 className="text-ink mt-0.5 text-xl font-bold tracking-tight">
-              Good morning, {PERSONA.name.split(" ")[0]}
+              Good morning, {persona.name.split(" ")[0]}
             </h1>
             <p className="text-mute mt-0.5 text-[13px]">
-              {PERSONA.company} claims program, refreshed overnight.
+              {persona.company} claims program, refreshed overnight.
             </p>
           </div>
           <Link
@@ -94,31 +74,34 @@ export function HomeView() {
 
         {/* KPI strip with trends */}
         <div data-tour="home-kpis" className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {KPIS.map((k) => (
-            <div key={k.label} className="panel-card p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-faint text-[11px] font-bold tracking-wide uppercase">{k.label}</p>
-                <k.icon className="text-brand size-4" />
-              </div>
-              <div className="mt-2 flex items-end justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="text-ink text-2xl font-bold tracking-tight">{k.value}</p>
-                  <p
-                    className={`mt-1 flex items-center gap-1 text-[11px] font-bold ${
-                      k.up === null ? "text-faint" : k.up ? "text-ok" : "text-err"
-                    }`}
-                  >
-                    {k.up === true && <TrendingUp className="size-3" />}
-                    {k.up === false && <TrendingDown className="size-3" />}
-                    {k.delta}
-                  </p>
+          {overview.kpis.map((k) => {
+            const Icon = KPI_ICON[k.id];
+            return (
+              <div key={k.id} className="panel-card p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-faint text-[11px] font-bold tracking-wide uppercase">{k.label}</p>
+                  <Icon className="text-brand size-4" />
                 </div>
-                <div className="hidden shrink-0 sm:block">
-                  <Sparkline points={k.trend} />
+                <div className="mt-2 flex items-end justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-ink text-2xl font-bold tracking-tight">{k.value}</p>
+                    <p
+                      className={`mt-1 flex items-center gap-1 text-[11px] font-bold ${
+                        k.up === null ? "text-faint" : k.up ? "text-ok" : "text-err"
+                      }`}
+                    >
+                      {k.up === true && <TrendingUp className="size-3" />}
+                      {k.up === false && <TrendingDown className="size-3" />}
+                      {k.delta}
+                    </p>
+                  </div>
+                  <div className="hidden shrink-0 sm:block">
+                    <Sparkline points={k.trend} />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="mt-5 grid gap-4 lg:grid-cols-[1.7fr_1fr]">
@@ -142,7 +125,7 @@ export function HomeView() {
                   </tr>
                 </thead>
                 <tbody>
-                  {RECENT_CLAIMS.map((f) => (
+                  {claims.map((f) => (
                     <tr key={f.claimNo} className="border-hairline hover:bg-hairline/40 border-b last:border-0">
                       <td className="text-brand px-4 py-2.5 font-mono text-[11.5px] font-bold">{f.claimNo}</td>
                       <td className="text-ink px-2 py-2.5 font-semibold">{f.claimant}</td>
@@ -170,7 +153,7 @@ export function HomeView() {
                 <span className="text-faint text-[11px]">monthly</span>
               </div>
               <div className="mt-2">
-                <Sparkline points={SPEND_BY_MONTH.map((m) => m.value)} width={300} height={64} />
+                <Sparkline points={spendByMonth.map((m) => m.value)} width={300} height={64} />
               </div>
               <div className="text-faint mt-1 flex justify-between text-[10.5px]">
                 <span>Jan</span>
@@ -179,7 +162,7 @@ export function HomeView() {
             </div>
 
             <h2 className="text-ink mt-1 text-[14px] font-bold">Pinned reports</h2>
-            {PINNED.map((p) => (
+            {overview.pinned.map((p) => (
               <Link
                 key={p.name}
                 href={`${p.href}?s=${scenario.id}`}
@@ -202,6 +185,25 @@ export function HomeView() {
         </div>
       </div>
       <Tour scene="home" scenarioId={scenario.id} />
+    </>
+  );
+}
+
+export function HomeView() {
+  const state = useAsync(async () => {
+    const [overview, claims, spend] = await Promise.all([
+      api.overview(),
+      api.recentClaims(),
+      api.spendSummary(),
+    ]);
+    return { overview, claims: claims.items, spendByMonth: spend.byMonth };
+  });
+
+  return (
+    <AppShell tourScene="home">
+      <Loadable state={state} label="Loading overview">
+        {(data) => <HomeContent {...data} />}
+      </Loadable>
     </AppShell>
   );
 }

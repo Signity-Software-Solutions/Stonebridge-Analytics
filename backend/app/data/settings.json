@@ -1,0 +1,28 @@
+{
+  "defaults": [
+    { "label": "Currency", "value": "USD" },
+    { "label": "Fiscal year starts", "value": "January" },
+    { "label": "Nightly refresh", "value": "02:00 local" },
+    { "label": "Saved charts visibility", "value": "Everyone in the workspace" }
+  ],
+  "notifications": [
+    {
+      "id": "refresh-digest",
+      "label": "Refresh digest",
+      "sub": "One morning note when the nightly load finishes",
+      "enabled": true
+    },
+    {
+      "id": "saved-chart-alerts",
+      "label": "Saved chart alerts",
+      "sub": "When someone saves a chart to a report you own",
+      "enabled": true
+    },
+    {
+      "id": "scope-refusals",
+      "label": "Scope refusals",
+      "sub": "When a question is refused on a report you own",
+      "enabled": false
+    }
+  ]
+}

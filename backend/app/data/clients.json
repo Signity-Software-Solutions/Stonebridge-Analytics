@@ -1,0 +1,82 @@
+[
+  {
+    "code": "ARVX",
+    "name": "Arvex Labs",
+    "industry": "Biotech",
+    "regions": 18,
+    "openClaims": 212,
+    "ytdPaid": 4612000
+  },
+  {
+    "code": "CLDR",
+    "name": "Calder Foods",
+    "industry": "Consumer goods",
+    "regions": 32,
+    "openClaims": 186,
+    "ytdPaid": 3904500
+  },
+  {
+    "code": "NMBS",
+    "name": "Nimbus Health",
+    "industry": "Healthcare",
+    "regions": 24,
+    "openClaims": 164,
+    "ytdPaid": 3488200
+  },
+  {
+    "code": "ORCH",
+    "name": "Orchid Systems",
+    "industry": "Software",
+    "regions": 11,
+    "openClaims": 149,
+    "ytdPaid": 2951800
+  },
+  {
+    "code": "TSSL",
+    "name": "Tessel Energy",
+    "industry": "Energy",
+    "regions": 27,
+    "openClaims": 131,
+    "ytdPaid": 2604300
+  },
+  {
+    "code": "PNWD",
+    "name": "Pinewood Media",
+    "industry": "Media",
+    "regions": 9,
+    "openClaims": 102,
+    "ytdPaid": 1892600
+  },
+  {
+    "code": "JNCA",
+    "name": "Junica Freight",
+    "industry": "Logistics",
+    "regions": 21,
+    "openClaims": 96,
+    "ytdPaid": 1571400
+  },
+  {
+    "code": "VELD",
+    "name": "Veldt Materials",
+    "industry": "Mining",
+    "regions": 14,
+    "openClaims": 71,
+    "ytdPaid": 1204900
+  },
+  {
+    "code": "SABL",
+    "name": "Sable Finance",
+    "industry": "Financial services",
+    "regions": 8,
+    "openClaims": 58,
+    "ytdPaid": 986300
+  },
+  {
+    "code": "QURT",
+    "name": "Quartet Hotels",
+    "industry": "Hospitality",
+    "regions": 12,
+    "openClaims": 44,
+    "ytdPaid": 721500
+  }
+]

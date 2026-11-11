@@ -2,25 +2,52 @@
 
 A small, independent FastAPI service that sits beside the Next.js frontend. It
 has its own dependencies, configuration and deployment, and the frontend does
-not import anything from it. The two only meet over HTTP.
+not import anything from it. The two only meet over HTTP. It runs on its own;
+the frontend needs it running.
 
-## What it does today
+## What it does
 
-The frontend screens render from their own typed fixtures, and this service
-deliberately does not copy that data. It holds the logic that must live on a
-server:
+It is the single source of data for the frontend, which holds none of its own,
+and it enforces the access check on questions. All endpoints are read only
+except the access check, which only evaluates the text it is sent.
 
-| Method | Path | Purpose |
+| Method | Path | Returns |
 | ------ | ---- | ------- |
 | GET | `/health` | Liveness probe for load balancers and deploys |
 | GET | `/api/v1/meta` | Service name, version and environment |
+| GET | `/api/v1/workspace` | The signed-in user and workspace |
+| GET | `/api/v1/overview` | Home KPIs and pinned reports |
+| GET | `/api/v1/clients` | Largest accounts |
+| GET | `/api/v1/claims/recent` | Newest claims |
+| GET | `/api/v1/reports` | Report catalog |
+| GET | `/api/v1/activity` | Workspace activity log |
+| GET | `/api/v1/analytics/usage` | Usage tiles and charts |
+| GET | `/api/v1/spend/summary` | Program Spend KPIs and chart series |
+| GET | `/api/v1/spend/lines` | Program Spend line detail and total row count |
+| GET | `/api/v1/scenarios` | Every scripted Ask question, plus the default |
+| GET | `/api/v1/scenarios/{id}` | One scripted question (404 if unknown) |
+| GET | `/api/v1/ask/context` | Suggestions and earlier exchanges on the Ask screen |
+| GET | `/api/v1/login/preview` | Figures in the sign in preview |
+| GET | `/api/v1/settings` | Workspace defaults and notification preferences |
 | POST | `/api/v1/ask/guard` | Access check: refuses questions that touch protected medical or personal identity fields |
 | GET | `/api/v1/ask/policy` | Lists the protected field categories |
 
-There is no database. The service is stateless and never stores or logs the
-text of a question.
+JSON keys are camelCase, matching the frontend types. List endpoints return
+`{ "items": [...] }`.
 
 Interactive docs are served at `/docs` outside production.
+
+## Data
+
+There is no database. The data is static JSON in `app/data/`, one file per
+resource. It is read and validated against the Pydantic schemas when the app
+starts, so a malformed or inconsistent file stops the service from booting and
+the error names the file. The service never writes data, and never stores or
+logs the text of a question.
+
+To change what the app shows, edit the JSON file and restart. To move to a real
+data source later, replace `DataStore` in `app/data/store.py`; the services,
+routers and frontend do not change.
 
 ### Example
 
@@ -111,16 +138,19 @@ app/
     v1/            Routers only: parse the request, call a service, return
   schemas/         Pydantic request and response models
   services/        Business logic, independent of HTTP
+  data/            The static JSON files and store.py, which loads and checks them
 tests/             pytest suite
 ```
 
 ## Adding an endpoint
 
 1. Add request and response models in `app/schemas/`.
-2. Put the logic in a class in `app/services/`.
-3. Add a router in `app/api/v1/` and include it in `app/api/v1/router.py`.
-4. Add the matching function to `src/lib/api.ts` in the frontend.
-5. Add tests in `tests/`.
+2. If it needs data, add a JSON file in `app/data/` and load it in `store.py`.
+3. Put the logic in a class in `app/services/`.
+4. Add a router in `app/api/v1/` and include it in `app/api/v1/router.py`.
+5. Add the matching types and function to `src/lib/types.ts` and
+   `src/lib/api.ts` in the frontend.
+6. Add tests in `tests/`.
 
 Raise `AppError` from a service for a deliberate client-facing failure and the
 error handlers will format it. Reach for a database only when an endpoint needs

@@ -2,14 +2,25 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from app.api.deps import get_guard_service
-from app.schemas.ask import GuardRequest, GuardResponse, PolicyResponse
+from app.api.deps import get_ask_context_service, get_guard_service
+from app.schemas.ask import AskContext, GuardRequest, GuardResponse, PolicyResponse
 from app.schemas.common import ErrorResponse
+from app.services.ask_context import AskContextService
 from app.services.guard import GuardService
 
 router = APIRouter(prefix="/ask", tags=["ask"])
 
 GuardDep = Annotated[GuardService, Depends(get_guard_service)]
+ContextDep = Annotated[AskContextService, Depends(get_ask_context_service)]
+
+
+@router.get(
+    "/context",
+    response_model=AskContext,
+    summary="Suggestions and earlier exchanges shown on the Ask screen",
+)
+def ask_context(service: ContextDep) -> AskContext:
+    return service.context()
 
 
 @router.post(

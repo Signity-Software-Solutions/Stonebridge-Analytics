@@ -3,9 +3,12 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { Loadable } from "@/components/Loadable";
 import { Tour } from "@/components/Tour";
-import { getScenario } from "@/lib/scenarios";
-import { REPORTS } from "@/lib/data";
+import { useScenarios } from "@/components/WorkspaceProvider";
+import { useAsync } from "@/hooks/useAsync";
+import { api } from "@/lib/api";
+import type { Report } from "@/lib/types";
 
 const DOMAIN_STYLE: Record<string, string> = {
   Finance: "bg-tint text-brand",
@@ -13,12 +16,13 @@ const DOMAIN_STYLE: Record<string, string> = {
   Partners: "bg-warn-soft text-warn",
 };
 
-export function ReportsView() {
+function ReportsContent({ reports }: { reports: Report[] }) {
   const router = useRouter();
+  const { getScenario } = useScenarios();
   const scenario = getScenario(useSearchParams().get("s"));
 
   return (
-    <AppShell tourScene="reports">
+    <>
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
         <div className="flex items-end justify-between gap-3">
           <div>
@@ -42,7 +46,7 @@ export function ReportsView() {
                 </tr>
               </thead>
               <tbody>
-                {REPORTS.map((r) => {
+                {reports.map((r) => {
                   const openable = r.key === "program-spend";
                   return (
                     <tr
@@ -83,6 +87,18 @@ export function ReportsView() {
         </p>
       </div>
       <Tour scene="reports" scenarioId={scenario.id} />
+    </>
+  );
+}
+
+export function ReportsView() {
+  const state = useAsync(() => api.reports());
+
+  return (
+    <AppShell tourScene="reports">
+      <Loadable state={state} label="Loading reports">
+        {(data) => <ReportsContent reports={data.items} />}
+      </Loadable>
     </AppShell>
   );
 }

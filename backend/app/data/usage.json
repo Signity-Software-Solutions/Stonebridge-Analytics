@@ -1,0 +1,102 @@
+{
+  "tiles": [
+    {
+      "label": "Questions asked",
+      "value": "483",
+      "sub": "last 8 weeks"
+    },
+    {
+      "label": "Charts saved",
+      "value": "89",
+      "sub": "18% of questions"
+    },
+    {
+      "label": "Refused by scope",
+      "value": "12",
+      "sub": "all compensation fields"
+    },
+    {
+      "label": "Median answer time",
+      "value": "6.2s",
+      "sub": "question to chart"
+    }
+  ],
+  "questionsPerWeek": [
+    {
+      "label": "W31",
+      "value": 42
+    },
+    {
+      "label": "W32",
+      "value": 51
+    },
+    {
+      "label": "W33",
+      "value": 47
+    },
+    {
+      "label": "W34",
+      "value": 63
+    },
+    {
+      "label": "W35",
+      "value": 58
+    },
+    {
+      "label": "W36",
+      "value": 72
+    },
+    {
+      "label": "W37",
+      "value": 69
+    },
+    {
+      "label": "W38",
+      "value": 81
+    }
+  ],
+  "savesByTeam": [
+    {
+      "label": "Finance Operations",
+      "value": 34
+    },
+    {
+      "label": "Treasury",
+      "value": 21
+    },
+    {
+      "label": "Claims Desk",
+      "value": 17
+    },
+    {
+      "label": "Program Office",
+      "value": 11
+    },
+    {
+      "label": "Partner Network",
+      "value": 6
+    }
+  ],
+  "topReports": [
+    {
+      "label": "Program Spend",
+      "value": 268
+    },
+    {
+      "label": "Open Reserves",
+      "value": 214
+    },
+    {
+      "label": "Active Claims",
+      "value": 189
+    },
+    {
+      "label": "Account Cash Position",
+      "value": 121
+    },
+    {
+      "label": "Payment Summary",
+      "value": 98
+    }
+  ]
+}

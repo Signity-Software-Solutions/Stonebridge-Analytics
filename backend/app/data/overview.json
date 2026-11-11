@@ -1,0 +1,89 @@
+{
+  "kpis": [
+    {
+      "id": "open-claims",
+      "label": "Open claims",
+      "value": "1,284",
+      "delta": "+38 this month",
+      "up": true,
+      "trend": [
+        1180,
+        1194,
+        1201,
+        1226,
+        1238,
+        1246,
+        1261,
+        1284
+      ]
+    },
+    {
+      "id": "paid-month",
+      "label": "Paid this month",
+      "value": "$2.19M",
+      "delta": "+6.3% vs August",
+      "up": true,
+      "trend": [
+        1.82,
+        1.96,
+        1.54,
+        2.08,
+        2.23,
+        2.41,
+        2.15,
+        2.19
+      ]
+    },
+    {
+      "id": "questions-week",
+      "label": "Questions this week",
+      "value": "81",
+      "delta": "+12 on last week",
+      "up": true,
+      "trend": [
+        42,
+        51,
+        47,
+        63,
+        58,
+        72,
+        69,
+        81
+      ]
+    },
+    {
+      "id": "live-reports",
+      "label": "Live reports",
+      "value": "46",
+      "delta": "refreshed 02:04",
+      "up": null,
+      "trend": [
+        40,
+        41,
+        42,
+        42,
+        44,
+        45,
+        46,
+        46
+      ]
+    }
+  ],
+  "pinned": [
+    {
+      "name": "Program Spend",
+      "blurb": "Paid by account, region, coverage and category",
+      "href": "/reports/program-spend"
+    },
+    {
+      "name": "Open Reserves",
+      "blurb": "Reserve position with aging per account",
+      "href": "/reports"
+    },
+    {
+      "name": "Active Claims",
+      "blurb": "Every open claim with incident and status",
+      "href": "/reports"
+    }
+  ]
+}

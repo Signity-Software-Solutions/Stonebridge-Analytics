@@ -1,0 +1,293 @@
+{
+  "defaultId": "grouped",
+  "items": [
+    {
+      "id": "grouped",
+      "label": "Clean build",
+      "tagline": "A clear question lands as a chart on the first pass",
+      "question": "Paid by claim category this fiscal year",
+      "typingMs": 2100,
+      "steps": [
+        {
+          "id": "context",
+          "label": "Reading report context",
+          "detail": "Program Spend: 14 measures, 9 dimensions, fiscal year window",
+          "durationMs": 1100
+        },
+        {
+          "id": "match",
+          "label": "Matching measures and dimensions",
+          "detail": "total_paid by claim_category, fiscal year to date",
+          "durationMs": 1400
+        },
+        {
+          "id": "scope",
+          "label": "Checking access scope",
+          "detail": "Workspace: Harborlight Group, all accounts",
+          "durationMs": 900
+        },
+        {
+          "id": "query",
+          "label": "Running the query",
+          "detail": "Warehouse round trip, read only",
+          "durationMs": 1600
+        },
+        {
+          "id": "draw",
+          "label": "Drawing the chart",
+          "detail": "Choosing a shape that fits the result",
+          "durationMs": 900
+        }
+      ],
+      "outcome": "saved",
+      "savedTitle": "Paid by claim category",
+      "insight": "Property damage carries 38% of program spend this year at $7.9M, with medical close behind at $6.4M. The two together outweigh every other category combined.",
+      "chart": {
+        "kind": "donut",
+        "title": "Paid by claim category",
+        "unit": "currency",
+        "points": [
+          {
+            "label": "Property damage",
+            "value": 7912400
+          },
+          {
+            "label": "Medical",
+            "value": 6438900
+          },
+          {
+            "label": "Liability",
+            "value": 3206750
+          },
+          {
+            "label": "Business interruption",
+            "value": 2118300
+          },
+          {
+            "label": "Legal costs",
+            "value": 1021600
+          }
+        ]
+      }
+    },
+    {
+      "id": "trend",
+      "label": "Prior year trend",
+      "tagline": "A time question draws this year against last year",
+      "question": "Monthly paid this year compared with last year",
+      "typingMs": 2400,
+      "steps": [
+        {
+          "id": "context",
+          "label": "Reading report context",
+          "detail": "Program Spend: 14 measures, 9 dimensions, fiscal year window",
+          "durationMs": 1100
+        },
+        {
+          "id": "match",
+          "label": "Matching measures and dimensions",
+          "detail": "total_paid by month, current window and the same window last year",
+          "durationMs": 1400
+        },
+        {
+          "id": "scope",
+          "label": "Checking access scope",
+          "detail": "Workspace: Harborlight Group, all accounts",
+          "durationMs": 900
+        },
+        {
+          "id": "query",
+          "label": "Running the query",
+          "detail": "Warehouse round trip, read only",
+          "durationMs": 1600
+        },
+        {
+          "id": "draw",
+          "label": "Drawing the chart",
+          "detail": "Choosing a shape that fits the result",
+          "durationMs": 900
+        }
+      ],
+      "outcome": "saved",
+      "savedTitle": "Monthly paid, year over year",
+      "insight": "Payments run ahead of last year in seven of nine months, with the widest gap in June at $2.41M against $1.78M. The March dip mirrors last year, so it reads as seasonal rather than a slowdown.",
+      "chart": {
+        "kind": "line",
+        "title": "Monthly paid, year over year",
+        "unit": "currency",
+        "seriesLabels": [
+          "This year",
+          "Last year"
+        ],
+        "points": [
+          {
+            "label": "Jan",
+            "value": 1820000,
+            "prior": 1640000
+          },
+          {
+            "label": "Feb",
+            "value": 1960000,
+            "prior": 1710000
+          },
+          {
+            "label": "Mar",
+            "value": 1540000,
+            "prior": 1460000
+          },
+          {
+            "label": "Apr",
+            "value": 2080000,
+            "prior": 1890000
+          },
+          {
+            "label": "May",
+            "value": 2230000,
+            "prior": 2040000
+          },
+          {
+            "label": "Jun",
+            "value": 2410000,
+            "prior": 1780000
+          },
+          {
+            "label": "Jul",
+            "value": 2150000,
+            "prior": 2210000
+          },
+          {
+            "label": "Aug",
+            "value": 2320000,
+            "prior": 2060000
+          },
+          {
+            "label": "Sep",
+            "value": 2190000,
+            "prior": 1950000
+          }
+        ]
+      }
+    },
+    {
+      "id": "refined",
+      "label": "Refined question",
+      "tagline": "A vague ask gets rewritten into a concrete one",
+      "question": "Which regions cost the most",
+      "typingMs": 1700,
+      "refinedQuestion": "Top 8 regions by total paid, this fiscal year",
+      "steps": [
+        {
+          "id": "context",
+          "label": "Reading report context",
+          "detail": "Program Spend: 14 measures, 9 dimensions, fiscal year window",
+          "durationMs": 1100
+        },
+        {
+          "id": "match",
+          "label": "Matching measures and dimensions",
+          "detail": "cost maps to total_paid; regions has 48 members",
+          "durationMs": 1400
+        },
+        {
+          "id": "refine",
+          "label": "Refining the question",
+          "detail": "48 regions would not read as a chart. Limiting to the top 8 by paid amount.",
+          "durationMs": 1700
+        },
+        {
+          "id": "scope",
+          "label": "Checking access scope",
+          "detail": "Workspace: Harborlight Group, all accounts",
+          "durationMs": 800
+        },
+        {
+          "id": "query",
+          "label": "Running the query",
+          "detail": "Warehouse round trip, read only",
+          "durationMs": 1500
+        },
+        {
+          "id": "draw",
+          "label": "Drawing the chart",
+          "detail": "Ranked bars, highest first",
+          "durationMs": 900
+        }
+      ],
+      "outcome": "saved",
+      "savedTitle": "Top 8 regions by paid",
+      "insight": "Gulf Coast leads at $3.42M, almost a third more than the next region. The top 8 of 48 regions carry 61% of all program spend, so the long tail is real but thin.",
+      "chart": {
+        "kind": "bars",
+        "title": "Top 8 regions by paid",
+        "unit": "currency",
+        "points": [
+          {
+            "label": "Gulf Coast",
+            "value": 3421000
+          },
+          {
+            "label": "Southeast",
+            "value": 2604500
+          },
+          {
+            "label": "Midwest",
+            "value": 2212800
+          },
+          {
+            "label": "Northeast",
+            "value": 1875200
+          },
+          {
+            "label": "Pacific",
+            "value": 1542600
+          },
+          {
+            "label": "Texas",
+            "value": 1327900
+          },
+          {
+            "label": "Mountain West",
+            "value": 1019400
+          },
+          {
+            "label": "Great Lakes",
+            "value": 894100
+          }
+        ]
+      }
+    },
+    {
+      "id": "guarded",
+      "label": "Out of scope",
+      "tagline": "A protected field is refused before any query runs",
+      "question": "Average claimant medical cost by diagnosis",
+      "typingMs": 2300,
+      "steps": [
+        {
+          "id": "context",
+          "label": "Reading report context",
+          "detail": "Program Spend: 14 measures, 9 dimensions, fiscal year window",
+          "durationMs": 1100
+        },
+        {
+          "id": "match",
+          "label": "Matching measures and dimensions",
+          "detail": "diagnosis is a medical field, not a program spend dimension",
+          "durationMs": 1500
+        },
+        {
+          "id": "scope",
+          "label": "Checking access scope",
+          "detail": "Medical and personal fields are excluded from every report",
+          "durationMs": 1300
+        }
+      ],
+      "outcome": "refused",
+      "refusal": {
+        "title": "That field is not available here",
+        "body": "Diagnosis belongs to medical data, which is excluded from reporting for every role in this workspace. No query was run and nothing was logged against the claimant records.",
+        "suggestion": "Average paid per claim by claim category"
+      }
+    }
+  ]
+}
