@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+ * The Stonebridge identity: indigo on warm grey, a dark sidebar, flat surfaces
+ * with hairline borders and small radii. Components style themselves with
+ * the SEMANTIC utilities mapped below; the values live on .theme-app so the
+ * whole product can restate them in one place.
+ * ------------------------------------------------------------------------ */
+
+.theme-app {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --raise: #ffffff;
+  --line: #e4e6ec;
+  --hairline: #eef0f4;
+  --ink: #171c2b;
+  --mute: #555d72;
+  --faint: #8a91a3;
+  --brand: #4f46e5;
+  --brand-2: #6366f1;
+  --tint: #eef0fe;
+  /* the dark rail */
+  --side: #151b2e;
+  --side-ink: #e9ecf5;
+  --side-mute: #9aa2b8;
+  --side-line: #262e45;
+  --side-tint: #262f52;
+  --ok: #0d9c6e;
+  --ok-soft: #e6f7f0;
+  --warn: #b45309;
+  --warn-soft: #fdf3e0;
+  --err: #cc3344;
+  --err-soft: #fdecee;
+  --proc: #4f46e5;
+  --proc-soft: #eef0fe;
+  --pend: #8795a9;
+  --pend-soft: #eef1f5;
+}
+
+@theme inline {
+  --color-canvas: var(--bg);
+  --color-surface: var(--surface);
+  --color-raise: var(--raise);
+  --color-line: var(--line);
+  --color-hairline: var(--hairline);
+  --color-ink: var(--ink);
+  --color-mute: var(--mute);
+  --color-faint: var(--faint);
+  --color-brand: var(--brand);
+  --color-brand2: var(--brand-2);
+  --color-tint: var(--tint);
+  --color-side: var(--side);
+  --color-side-ink: var(--side-ink);
+  --color-side-mute: var(--side-mute);
+  --color-side-line: var(--side-line);
+  --color-side-tint: var(--side-tint);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-err: var(--err);
+  --color-err-soft: var(--err-soft);
+  --color-proc: var(--proc);
+  --color-proc-soft: var(--proc-soft);
+  --color-pend: var(--pend);
+  --color-pend-soft: var(--pend-soft);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jbmono), ui-monospace, monospace;
+
+  --radius-panel: 0.65rem;
+  --radius-field: 0.45rem;
+
+  --animate-shimmer: shimmer 1.3s linear infinite;
+  --animate-pop-in: pop-in 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+  --animate-pulse-dot: pulse-dot 1.2s ease-in-out infinite;
+  --animate-rise: rise 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+@keyframes rise {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Flat raised card: white, hairline border, small radius, barely-there lift. */
+@utility panel-card {
+  background: var(--raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  box-shadow: 0 1px 2px rgb(23 28 43 / 0.05);
+}
+
+/* Placeholder rows while nothing has loaded yet. */
+@utility bg-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--hairline) 25%,
+    color-mix(in srgb, var(--faint) 28%, var(--hairline)) 50%,
+    var(--hairline) 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* The one accent surface: solid brand, no gradients anywhere. */
+@utility bg-brand-strong {
+  background: var(--brand);
+}
+
+html,
+body {
+  height: 100%;
+}
+html {
+  color-scheme: light;
+}
+body {
+  font-family: var(--font-sans);
+  background: #f6f7f9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer,
+  .animate-pulse-dot {
+    animation: none;
+  }
+}
